@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {Link, useNavigate } from "react-router-dom";
 import api from "../../api.js";
+import './index.scss';
 
 
 export default function Home() {
@@ -28,7 +29,19 @@ export default function Home() {
     }
 
     const handleEditar = (id) => {
-        navigate(`/editar/${id}`);
+        
+        navigate(`/atualizarUser/${id}`);
+    }
+
+    const handleDeletar =  async(id) => {
+        if(!window.confirm('Tem certeza que deseja deletar o usuário?')) return
+
+        try{
+        await api.delete(`/deletarUser/${id}`);
+        setResultados(resultados.filter(user => user.id !== id));
+        } catch (err) {
+            setError(err.message || 'Erro ao deletar usuário. Tente novamente.');
+        }
     }
 
     return (
@@ -57,11 +70,14 @@ export default function Home() {
                         <li>{user.nome}</li>
                         <li>{user.idade}</li>
                         <li>{user.curso}</li>
+                        
+                        <button onClick={() => handleEditar(user.id_aluno)}>editar</button>
+
+                        <button onClick={() => handleDeletar(user.id_aluno)}>deletar</button>
+
                         </div>
                     ))}
                 </ul>
-                <button>editar</button>
-                <button>deletar</button>
             </div>
 
         </main>

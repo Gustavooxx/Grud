@@ -2,7 +2,7 @@ import connection from "../connection.js";
 
 export async function listarUsers(nome) {
     const comando = `
-    select nome, idade,curso from cadastrar_aluno
+    select id_aluno, nome, idade,curso from cadastrar_aluno
     where nome like ?
     `
     const [registro] = await connection.query(comando, [`%${nome}%`]);
