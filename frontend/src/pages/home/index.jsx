@@ -34,13 +34,34 @@ export default function Home() {
     }
 
     const handleDeletar =  async(id) => {
-        if(!window.confirm('Tem certeza que deseja deletar o usuário?')) return
+        if(!window.confirm('Tem certeza que deseja deletar o usuário?'))
+        return
 
         try{
         await api.delete(`/deletarUser/${id}`);
         setResultados(resultados.filter(user => user.id !== id));
         } catch (err) {
             setError(err.message || 'Erro ao deletar usuário. Tente novamente.');
+        }
+    }
+
+    const handleCadastrar = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+
+        const data = {
+            nome: formData.get('nome'),
+            idade: formData.get('idade'),
+            curso: formData.get('curso')
+        };
+
+        try{
+            const response = await api.post('/adicionarUser', data)
+            alert('Usuário cadastrado com sucesso!');
+            e.target.reset();
+        } catch (err){
+            setError(err.message || 'Erro ao cadastrar usuário. Tente novamente.');
         }
     }
 
@@ -78,6 +99,22 @@ export default function Home() {
                         </div>
                     ))}
                 </ul>
+            </div>
+
+            <div className="adicionarUser">
+                    <h2>Cadastrar Usuário</h2>
+                    <form onSubmit={handleCadastrar}>
+                        <input type="text"
+                        name="nome"
+                        placeholder="Nome" />
+                        <input type="number"
+                        name="idade"
+                        placeholder="Idade" />
+                        <input type="text"
+                        name="curso"
+                        placeholder="Curso" />
+                        <button type="submit">Cadastrar</button>
+                    </form>
             </div>
 
         </main>
